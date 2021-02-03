@@ -10,10 +10,7 @@ void main() => runApp(MyApp());
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Welcome to Flutter',
-      home: RandomWords()
-    );
+    return MaterialApp(title: 'Welcome to Flutter', home: RandomWords());
   }
 }
 
@@ -24,6 +21,7 @@ class RandomWords extends StatefulWidget {
 
 class _RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
+  final _saved = Set<WordPair>();
   final _biggerFont = TextStyle(fontSize: 18.0);
 
   Widget _buildSuggestions() {
@@ -41,11 +39,23 @@ class _RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildRow(WordPair pair) {
+    final alreadySaved = _saved.contains(pair);
     return ListTile(
       title: Text(
         pair.asPascalCase,
         style: _biggerFont,
       ),
+      trailing: Icon(alreadySaved ? Icons.favorite : Icons.favorite_border,
+          color: alreadySaved ? Colors.pink : null),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
     );
   }
 
